@@ -4,67 +4,87 @@ import com.udea.drools.model.Customer
 import com.udea.drools.model.CreditRequest
 import com.udea.drools.model.CreditResponse
 
-// Regla 1: Rechazar si el puntaje crediticio es menor a 500
-rule "RejectLowCreditScore"
-    when
-        $request : CreditRequest(customer.creditScore < 500)
-        $response : CreditResponse()
-    then
-        $response.setApproved(false);
-        $response.setMessage("Solicitud rechazada: Puntaje crediticio demasiado bajo.");
+// Regla 1
+rule "UpgradeToBusinessClassForFrequentFlyersWithDelays:"
+when
+    $passenger : Passenger(status == "Gold" || status == "Platinum")
+    $flight : Flight(delay > 60)
+then
+    $passenger.setUpgradeToBusinessClass(true);
 end
 
-// Regla 2: Rechazar si la edad es menor a 18
-rule "RejectUnderAge"
-    when
-        $request : CreditRequest(customer.age < 18)
-        $response : CreditResponse()
-    then
-        $response.setApproved(false);
-        $response.setMessage("Solicitud rechazada: El cliente debe ser mayor de 18 años.");
+// Regla 2
+rule "PriorityCheckInForSeniors"
+when
+    $passenger : Passenger(age > 65)
+then
+    $passenger.setPriorityCheckIn(true);
 end
 
-// Regla 3: Crédito Personal - Evaluación
-rule "PersonalCreditApproval"
-    when
-        $request : CreditRequest(creditType == "personal", customer.creditScore >= 500, customer.monthlyIncome >= 1000)
-        $response : CreditResponse()
-    then
-        $response.setApproved(true);
-        $response.setApprovedAmount(Math.min($request.getRequestedAmount(), $request.getCustomer().getMonthlyIncome() * 10));
-        $response.setInterestRate($request.getCustomer().getCreditScore() > 700 ? 5.0 : 8.0);
-        $response.setMessage("Crédito personal aprobado.");
+// Regla 3
+rule "DiscountForLightLuggage"
+when
+    $luggage : Luggage(weight < 10)
+then
+    $luggage.setDiscount(10); // Apply 10% discount
 end
 
-// Regla 4: Crédito Hipotecario - Evaluación
-rule "MortgageCreditApproval"
-    when
-        $request : CreditRequest(creditType == "hipotecario", customer.creditScore >= 600, customer.monthlyIncome >= 3000)
-        $response : CreditResponse()
-    then
-        $response.setApproved(true);
-        $response.setApprovedAmount(Math.min($request.getRequestedAmount(), $request.getCustomer().getMonthlyIncome() * 50));
-        $response.setInterestRate($request.getCustomer().getCreditScore() > 750 ? 3.5 : 4.5);
-        $response.setMessage("Crédito hipotecario aprobado.");
+// Regla 4
+rule "DenyUpgradeForOverweightLuggage"
+when
+    $luggage : Luggage(weight > 23)
+then
+    $luggage.setEligibleForUpgrade(false);
 end
 
-// Regla 5: Crédito Automotriz - Evaluación
-rule "AutoCreditApproval"
-    when
-        $request : CreditRequest(creditType == "automotriz", customer.creditScore >= 550, customer.monthlyIncome >= 1500)
-        $response : CreditResponse()
-    then
-        $response.setApproved(true);
-        $response.setApprovedAmount(Math.min($request.getRequestedAmount(), $request.getCustomer().getMonthlyIncome() * 20));
-        $response.setInterestRate($request.getCustomer().getCreditScore() > 700 ? 6.0 : 7.5);
-        $response.setMessage("Crédito automotriz aprobado.");
+// Regla 5
+rule "AssignEmergencyExitSeatToYoungAdults"
+when
+    $passenger : Passenger(age >= 18 && age <= 40, seatPreference == "Any")
+    $seat : Seat(type == "EmergencyExit", available == true)
+then
+    $passenger.setAssignedSeat($seat);
+    $seat.setOccupied(true);
 end
 
-// Regla 6: Rechazar si no cumple con requisitos mínimos por tipo de crédito
-rule "RejectInvalidCreditType"
-    when
-        $request : CreditRequest()
-        $response : CreditResponse(approved == false)
-    then
-        $response.setMessage($response.getMessage() != null ? $response.getMessage() : "Solicitud rechazada: No cumple con los requisitos para el tipo de crédito solicitado.");
+// Regla 6
+rule "CompensationForExtremeDelays"
+when
+    $flight : Flight(delay > 180)
+then
+    $passenger.setCompensation(200); // Grant $200 compensation
+end
+
+// Regla 7
+rule "ExtraLoyaltyPointsForLongFlights"
+when
+    $passenger : Passenger(membership != "Basic")
+    $flight : Flight(duration > 5)
+then
+    $passenger.addLoyaltyPoints(500); // Add 500 loyalty points
+end
+
+// Regla 8
+rule "RestrictLuggageOnShortFlights"
+when
+    $luggage : Luggage(weight > 15)
+    $flight : Flight(duration < 2)
+then
+    $luggage.setAllowed(false); // Mark luggage as not allowed
+end
+
+// Regla 9
+rule "VipLoungeAccessForPlatinumMembers"
+when
+    $passenger : Passenger(status == "Platinum")
+then
+    $passenger.setVipLoungeAccess(true);
+end
+
+// Regla 10
+rule "PreferentialSeatForFamilies"
+when
+    $passenger : Passenger(travelingWithChildren == true, seatPreference == null)
+then
+    $passenger.setAssignedSeat("FamilyPreferred");
 end

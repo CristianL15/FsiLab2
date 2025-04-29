@@ -1,21 +1,21 @@
 package com.udea.drools.service;
 
-import com.udea.drools.model.CreditRequest;
-import com.udea.drools.model.CreditResponse;
+import com.udea.drools.model.Request;
+import com.udea.drools.model.Response;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreditEvaluationService {
+public class AirlineEvaluationService {
 
     @Autowired
     private KieContainer kieContainer;
 
-    public CreditResponse evaluateCredit(CreditRequest request) {
+    public Response evaluateRequest(Request request) {
         // Crear una respuesta inicial
-        CreditResponse response = new CreditResponse();
+        Response response = new Response();
 
         // Crear una sesión de Drools
         KieSession kieSession = kieContainer.newKieSession();

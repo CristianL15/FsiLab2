@@ -1,16 +1,16 @@
 package com.udea.drools.model;
 
-public class CreditResponse {
+public class Response {
     private boolean approved;
     private double approvedAmount;
     private double interestRate;
     private String message;
 
     // Constructor vacío
-    public CreditResponse() {}
+    public Response() {}
 
     // Constructor con parámetros
-    public CreditResponse(boolean approved, double approvedAmount, double interestRate, String message) {
+    public Response(boolean approved, double approvedAmount, double interestRate, String message) {
         this.approved = approved;
         this.approvedAmount = approvedAmount;
         this.interestRate = interestRate;
