@@ -14,12 +14,11 @@ import org.springframework.context.annotation.Configuration;
 public class DroolsConfig {
 
     private static final KieServices kieServices = KieServices.Factory.get();
-    private static final String RULES_CUSTOMER_RULES_DRL = "rules/credit_rules.drl";
 
     @Bean
     public KieContainer kieContainer() {
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-        kieFileSystem.write(ResourceFactory.newClassPathResource(RULES_CUSTOMER_RULES_DRL));
+        kieFileSystem.write(ResourceFactory.newClassPathResource("rules/rules.drl"));
         KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
         kb.buildAll();
         KieModule kieModule = kb.getKieModule();

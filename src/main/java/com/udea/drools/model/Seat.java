@@ -1,17 +1,21 @@
 package com.udea.drools.model;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class Seat {
 
-    @NotBlank(message = "El tipo de asiento es obligatorio")
+    @NotNull(message = "El tipo de asiento es obligatorio")
     private String type;
 
     @NotNull(message = "Disponibilidad es obligatoria")
     private Boolean available;
 
     public Seat() {}
+
+    public Seat(String type) {
+        this.type = type;
+        this.available = true;
+    }
 
     public Seat(String type, Boolean available) {
         this.type = type;

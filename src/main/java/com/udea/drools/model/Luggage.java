@@ -10,7 +10,6 @@ public class Luggage {
     private Double weight;
 
     private double discount;
-    private boolean eligibleForUpgrade = true;
     private boolean allowed = true;
 
     public Luggage() {}
@@ -18,7 +17,6 @@ public class Luggage {
     public Luggage(Double weight) {
         this.weight = weight;
         this.discount = 0;
-        this.eligibleForUpgrade = true;
         this.allowed = true;
     }
 
@@ -27,9 +25,6 @@ public class Luggage {
 
     public double getDiscount() { return discount; }
     public void setDiscount(double discount) { this.discount = discount; }
-
-    public boolean isEligibleForUpgrade() { return eligibleForUpgrade; }
-    public void setEligibleForUpgrade(boolean eligible) { this.eligibleForUpgrade = eligible; }
 
     public boolean isAllowed() { return allowed; }
     public void setAllowed(boolean allowed) { this.allowed = allowed; }

@@ -13,11 +13,10 @@ public class Flight {
     @Min(value = 0, message = "La duración no puede ser negativa")
     private Integer duration;  // en horas
 
-    public Flight() {}
-
-    public Flight(Integer delay, Integer duration) {
-        this.delay = delay;
-        this.duration = duration;
+    public Flight() {
+        this.delay = 190;
+        // this.delay = (int)(Math.random() * 200);
+        this.duration = (int)(Math.random() * 23) + 1;
     }
 
     public Integer getDelay() { return delay; }

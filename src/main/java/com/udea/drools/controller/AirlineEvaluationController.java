@@ -2,6 +2,9 @@ package com.udea.drools.controller;
 
 import com.udea.drools.model.Request;
 import com.udea.drools.model.Response;
+import com.udea.drools.model.Flight;
+import com.udea.drools.model.Seat;
+import com.udea.drools.model.Passenger;
 import com.udea.drools.service.AirlineEvaluationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +23,13 @@ public class AirlineEvaluationController {
     // Endpoint REST
     @PostMapping("/api/evaluate")
     @ResponseBody
-    public Response evaluteRequestAPI(@Valid @RequestBody Request request, BindingResult result) {
+    public Response evaluteRequestApi(@Valid @RequestBody Request request, BindingResult result) {
         if (result.hasErrors()) {
             String errorMessage = result.getAllErrors().stream()
                     .map(error -> error.getDefaultMessage())
                     .reduce((msg1, msg2) -> msg1 + "; " + msg2)
                     .orElse("Errores de validación");
-            return new Response(false, 0.0, 0.0, "Error de validación: " + errorMessage);
+            return new Response(request.getPassenger(), errorMessage);
         }
         return evaluationService.evaluateRequest(request);
     }
@@ -35,20 +38,37 @@ public class AirlineEvaluationController {
     @GetMapping("/form")
     public String showForm(Model model) {
         Request request = new Request();
-        // creditRequest.setCustomer(new Customer());
-        model.addAttribute("creditRequest", request);
+        request.setPassenger(new Passenger());
+        model.addAttribute("Request", request);
         return "airline_form";
     }
 
-    // Procesar solicitud desde el formulario web
     @PostMapping("/evaluate")
-    public String evaluateCreditWeb(@Valid Request request, BindingResult result, Model model) {
+    public String evaluateWeb(@Valid Request request, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            // Si hay errores de validación, volver al formulario con los errores
+            model.addAttribute("Request", request);
             return "airline_form";
         }
+
         Response response = evaluationService.evaluateRequest(request);
-        model.addAttribute("creditResponse", response);
+        if (response == null) {
+            response = new Response();
+            response.setMessage("No se pudo procesar la solicitud.");
+        }
+
+        if (response.getPassenger() == null) {
+            response.setPassenger(request.getPassenger());
+        }
+
+        if (response.getPassenger().getFlight() == null) {
+            response.getPassenger().setFlight(new Flight());
+        }
+
+        if (response.getPassenger().getAssignedSeat() == null) {
+            response.getPassenger().setAssignedSeat(new Seat(request.getPassenger().getSeatPreference()));
+        }
+
+        model.addAttribute("Response", response);
         return "airline_result";
-    }
+        }
 }

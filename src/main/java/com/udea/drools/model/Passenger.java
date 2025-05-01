@@ -1,48 +1,54 @@
 package com.udea.drools.model;
-
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class Passenger {
+    @NotNull(message = "El nombre es obligatorio")
+    private String name;
 
-    @NotBlank(message = "El estado de membresía es obligatorio")
+    @NotNull(message = "El estado de membresía es obligatorio")
     private String status;
 
     @NotNull(message = "La edad es obligatoria")
     @Min(value = 0, message = "La edad no puede ser negativa")
     private Integer age;
 
-    private String seatPreference;
-
     @NotNull(message = "Debe indicarse si viaja con niños")
     private Boolean travelingWithChildren;
 
-    @NotBlank(message = "El nivel de membresía es obligatorio")
-    private String membership;
-
+    private String seatPreference;
     private boolean upgradeToBusinessClass;
+    private boolean eligibleForUpgrade;
     private boolean priorityCheckIn;
-    private boolean vipLoungeAccess;
+    private boolean VipAccess;
     private double compensation;
     private int loyaltyPoints;
     private Seat assignedSeat;
+    private Luggage luggage;
+    private Flight flight;
 
     public Passenger() {}
 
-    public Passenger(String status, Integer age, String seatPreference,
-                     Boolean travelingWithChildren, String membership) {
-        this.status = status;
+    public Passenger(String name, String status, Integer age, String seatPreference,
+                     Boolean travelingWithChildren, String membership, Luggage luggage) {
+        this.name = name;
+        this.status = status; //Basic, Gold, platinum, Business
         this.age = age;
-        this.seatPreference = seatPreference;
+        this.seatPreference = seatPreference; //Window, aisle, middle
         this.travelingWithChildren = travelingWithChildren;
-        this.membership = membership;
         this.upgradeToBusinessClass = false;
+        this.eligibleForUpgrade = true;
         this.priorityCheckIn = false;
-        this.vipLoungeAccess = false;
+        this.VipAccess = false;
         this.compensation = 0;
         this.loyaltyPoints = 0;
+        this.luggage = luggage;
+        this.flight = new Flight();
+        this.assignedSeat = new Seat(this.seatPreference);
     }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
@@ -58,17 +64,17 @@ public class Passenger {
         this.travelingWithChildren = travelingWithChildren;
     }
 
-    public String getMembership() { return membership; }
-    public void setMembership(String membership) { this.membership = membership; }
-
     public boolean isUpgradeToBusinessClass() { return upgradeToBusinessClass; }
     public void setUpgradeToBusinessClass(boolean upgrade) { this.upgradeToBusinessClass = upgrade; }
+
+    public boolean isEligibleForUpgrade() { return eligibleForUpgrade; }
+    public void setEligibleForUpgrade(boolean eligible) { this.eligibleForUpgrade = eligible; }
 
     public boolean isPriorityCheckIn() { return priorityCheckIn; }
     public void setPriorityCheckIn(boolean priority) { this.priorityCheckIn = priority; }
 
-    public boolean isVipLoungeAccess() { return vipLoungeAccess; }
-    public void setVipLoungeAccess(boolean access) { this.vipLoungeAccess = access; }
+    public boolean hasVipAccess() { return VipAccess; }
+    public void setVipAccess(boolean access) { this.VipAccess = access; }
 
     public double getCompensation() { return compensation; }
     public void setCompensation(double compensation) { this.compensation = compensation; }
@@ -79,4 +85,10 @@ public class Passenger {
 
     public Seat getAssignedSeat() { return assignedSeat; }
     public void setAssignedSeat(Seat seat) { this.assignedSeat = seat; }
+
+    public Luggage getLuggage() { return luggage; }
+    public void setLuggage(Luggage luggage) { this.luggage = luggage; }
+
+    public Flight getFlight() { return flight; }
+    public void setFlight(Flight flight) { this.flight = flight; }
 }
