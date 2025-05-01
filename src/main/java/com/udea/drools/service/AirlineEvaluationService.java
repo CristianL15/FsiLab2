@@ -14,21 +14,15 @@ public class AirlineEvaluationService {
     private KieContainer kieContainer;
 
     public Response evaluateRequest(Request request) {
-        // Crear una respuesta inicial
         Response response = new Response();
-
-        // Crear una sesión de Drools
         KieSession kieSession = kieContainer.newKieSession();
 
         try {
-            // Insertar los hechos (request y response) en la sesión
             kieSession.insert(request);
             kieSession.insert(response);
 
-            // Ejecutar todas las reglas
             kieSession.fireAllRules();
         } finally {
-            // Liberar la sesión
             kieSession.dispose();
         }
 

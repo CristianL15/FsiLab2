@@ -2,8 +2,6 @@ package com.udea.drools.controller;
 
 import com.udea.drools.model.Request;
 import com.udea.drools.model.Response;
-import com.udea.drools.model.Flight;
-import com.udea.drools.model.Seat;
 import com.udea.drools.model.Passenger;
 import com.udea.drools.service.AirlineEvaluationService;
 import jakarta.validation.Valid;
@@ -46,29 +44,12 @@ public class AirlineEvaluationController {
     @PostMapping("/evaluate")
     public String evaluateWeb(@Valid Request request, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("Request", request);
             return "airline_form";
         }
 
         Response response = evaluationService.evaluateRequest(request);
-        if (response == null) {
-            response = new Response();
-            response.setMessage("No se pudo procesar la solicitud.");
-        }
-
-        if (response.getPassenger() == null) {
-            response.setPassenger(request.getPassenger());
-        }
-
-        if (response.getPassenger().getFlight() == null) {
-            response.getPassenger().setFlight(new Flight());
-        }
-
-        if (response.getPassenger().getAssignedSeat() == null) {
-            response.getPassenger().setAssignedSeat(new Seat(request.getPassenger().getSeatPreference()));
-        }
-
-        model.addAttribute("Response", response);
+        model.addAttribute("request", request);
+        model.addAttribute("response", response);
         return "airline_result";
-        }
+    }
 }

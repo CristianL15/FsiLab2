@@ -17,15 +17,15 @@ public class Passenger {
     private Boolean travelingWithChildren;
 
     private String seatPreference;
-    private boolean upgradeToBusinessClass;
-    private boolean eligibleForUpgrade;
-    private boolean priorityCheckIn;
-    private boolean VipAccess;
-    private double compensation;
-    private int loyaltyPoints;
-    private Seat assignedSeat;
+    private boolean upgradeToBusinessClass = false;
+    private boolean eligibleForUpgrade = true;
+    private boolean priorityCheckIn = false;
+    private boolean vipAccess = false;
+    private double compensation = 0;
+    private int loyaltyPoints = 0;
     private Luggage luggage;
-    private Flight flight;
+    private Flight flight = new Flight();
+    private Seat assignedSeat = new Seat(this.seatPreference);
 
     public Passenger() {}
 
@@ -36,14 +36,7 @@ public class Passenger {
         this.age = age;
         this.seatPreference = seatPreference; //Window, aisle, middle
         this.travelingWithChildren = travelingWithChildren;
-        this.upgradeToBusinessClass = false;
-        this.eligibleForUpgrade = true;
-        this.priorityCheckIn = false;
-        this.VipAccess = false;
-        this.compensation = 0;
-        this.loyaltyPoints = 0;
         this.luggage = luggage;
-        this.flight = new Flight();
         this.assignedSeat = new Seat(this.seatPreference);
     }
 
@@ -73,8 +66,8 @@ public class Passenger {
     public boolean isPriorityCheckIn() { return priorityCheckIn; }
     public void setPriorityCheckIn(boolean priority) { this.priorityCheckIn = priority; }
 
-    public boolean hasVipAccess() { return VipAccess; }
-    public void setVipAccess(boolean access) { this.VipAccess = access; }
+    public boolean isVipAccess() { return vipAccess; }
+    public void setVipAccess(boolean access) { this.vipAccess = access; }
 
     public double getCompensation() { return compensation; }
     public void setCompensation(double compensation) { this.compensation = compensation; }
@@ -91,4 +84,9 @@ public class Passenger {
 
     public Flight getFlight() { return flight; }
     public void setFlight(Flight flight) { this.flight = flight; }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

@@ -34,85 +34,89 @@
   </style>
 </head>
 <body>
-<div class="result-container">\
-  <h2><i class="bi bi-check-circle-fill"></i>Pase de abordar</h2>
-
-  <div class="info-item">
-    <span class="label">Nombre:</span>
-    <span class="value" th:text="${Response.passenger.name}"></span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">Edad:</span>
-    <span class="value" th:text="${Response.passenger.age}"></span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">Membresía:</span>
-    <span class="value" th:text="${Response.passenger.status}"></span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">Viaja con niños:</span>
-    <span class="value" th:text="${Response.passenger.travelingWithChildren}"></span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">Preferencia de asiento:</span>
-    <span class="value" th:text="${Response.passenger.seatPreference}"></span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">Duración del vuelo</span>
-    <span class="value" th:text="${Response.passenger.flight.duration} + ' horas'"></span>
-  </div>
-
-  <div class="info-item">
-    <span class="label">Retraso:</span>
-    <span class="value" th:text="${Response.passenger.flight.delay} + ' minutos'"></span>
-  </div>
+  <!-- <div th:if='${response != null and response.passenger != null}' class="result-container">\ -->
+  <div class="result-container">
+    <h2><i class="bi bi-check-circle-fill"></i>Pase de abordar</h2>
 
     <div class="info-item">
-      <span class="label">Asiento asignado:</span>
-      <span class="value" th:text="${Response.passenger.assignedSeat.type}"></span>
+      <span class="label">Nombre:</span>
+      <span class="value" th:text="${response.passenger.name}"></span>
     </div>
 
-  <div class="info-item">
-    <span class="label">Check-in prioritario:</span>
-    <span class="value" th:text="${Response.passenger.priorityCheckIn}"></span>
-  </div>
+    <div class="info-item">
+      <span class="label">Edad:</span>
+      <span class="value" th:text="${response.passenger.age}"></span>
+    </div>
 
-  <div class="info-item">
-    <span class="label">Descuento:</span>
-    <span class="value" th:text="${Response.passenger.luggage.discount}"></span>
-  </div>
+    <div class="info-item">
+      <span class="label">Membresía:</span>
+      <span class="value" th:text="${response.passenger.status}"></span>
+    </div>
 
-  <div class="info-item">
-    <span class="label">Elegible para upgrade:</span>
-    <span class="value" th:text="${Response.passenger.eligibleForUpgrade}"></span>
-  </div>
+    <div class="info-item">
+      <span class="label">Viaja con niños:</span>
+      <span class="value" th:text="${response.passenger.travelingWithChildren}"></span>
+    </div>
 
-  <div class="info-item">
-    <span class="label">Compensación ($):</span>
-    <span class="value" th:text="${Response.passenger.compensation}"></span>
-  </div>
+    <div class="info-item">
+      <span class="label">Preferencia de asiento:</span>
+      <span class="value" th:text="${response.passenger.seatPreference}"></span>
+    </div>
 
-  <div class="info-item">
-    <span class="label">Puntos de lealtad:</span>
-    <span class="value" th:text="${Response.passenger.loyaltyPoints}"></span>
-  </div>
+    <div class="info-item">
+      <span class="label">Duración del vuelo:</span>
+      <span class="value" th:text="${response.passenger.flight.duration} + ' horas'"></span>
+    </div>
 
-  <div class="info-item">
-    <span class="label">Equipaje permitido:</span>
-    <span class="value" th:text="${Response.passenger.luggage.allowed}"></span>
-  </div>
+    <div class="info-item">
+      <span class="label">Retraso:</span>
+      <span class="value" th:text="${response.passenger.flight.delay} + ' minutos'"></span>
+    </div>
 
-  <!-- <div class="info-item">
-    <span class="label">Acceso VIP:</span>
-    <span class="value" th:text="${Response.passenger.VipAccess}"></span>
+      <div class="info-item">
+        <span class="label">Asiento asignado:</span>
+        <span class="value" th:text="${response.passenger.assignedSeat.type}"></span>
+      </div>
+
+    <div class="info-item">
+      <span class="label">Check-in prioritario:</span>
+      <span class="value" th:text="${response.passenger.priorityCheckIn}"></span>
+    </div>
+
+    <div class="info-item">
+      <span class="label">Descuento:</span>
+      <span class="value" th:text="${response.passenger.luggage.discount}"></span>
+    </div>
+
+    <div class="info-item">
+      <span class="label">Elegible para ascenso:</span>
+      <span class="value" th:text="${response.passenger.upgradeToBusinessClass}"></span>
+    </div>
+
+    <div class="info-item">
+      <span class="label">Compensación ($):</span>
+      <span class="value" th:text="${response.passenger.compensation}"></span>
+    </div>
+
+    <div class="info-item">
+      <span class="label">Puntos de lealtad:</span>
+      <span class="value" th:text="${response.passenger.loyaltyPoints}"></span>
+    </div>
+
+    <div class="info-item">
+      <span class="label">Equipaje permitido:</span>
+      <span class="value" th:text="${response.passenger.luggage.allowed}"></span>
+    </div>
+
+    <div class="info-item">
+      <span class="label">Acceso VIP:</span>
+      <span class="value" th:text="${response.passenger.vipAccess}"></span>
+    </div>
+
+    <a th:href="@{/flight/form}" class="btn-back">Volver a solicitar</a>
+  </div>
+  <!-- <div th:if="${response == null or response.passenger == null}">
+    <p>No hay resultados disponibles</p>
   </div> -->
-
-  <a th:href="@{/flight/form}" class="btn-back">Volver a solicitar</a>
-</div>
 </body>
 </html>

@@ -14,8 +14,7 @@ public class Flight {
     private Integer duration;  // en horas
 
     public Flight() {
-        this.delay = 190;
-        // this.delay = (int)(Math.random() * 200);
+        this.delay = (int)(Math.random() * 240);
         this.duration = (int)(Math.random() * 23) + 1;
     }
 

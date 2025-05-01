@@ -1,113 +1,121 @@
-package rules;
+package rules
 
 import com.udea.drools.model.Passenger;
-import com.udea.drools.model.Flight;
-import com.udea.drools.model.Luggage;
-import com.udea.drools.model.Seat;
-import com.udea.drools.model.Response;
 import com.udea.drools.model.Request;
+import com.udea.drools.model.Response;
 
 rule "1. UpgradeToBusinessClassForFrequentFlyersWithDelays"
 when
     $request : Request($passenger : passenger)
-    eval($passenger.getFlight() != null && $passenger.getFlight().getDelay() > 60)
-    eval( $passenger.getStatus() == "Gold" || $passenger.getStatus() == "Platinum")
+    eval($passenger.getFlight().getDelay() > 60)
+    eval($passenger.getStatus() == "Gold" || $passenger.getStatus() == "Platinum")
     $response : Response()
 then
-    $passenger.setEligibleForUpgrade(true);
+    $passenger.setUpgradeToBusinessClass(true);
     $response.setPassenger($passenger);
+    $response.setMessage("Ascenso a clase ejecutiva por retraso y membresía premium.");
 end
 
 rule "2. PriorityCheckInForSeniors"
 when
     $request : Request($passenger : passenger)
+    eval($passenger.getAge() > 65)
     $response : Response()
-    $passenger : Passenger(age > 65)
 then
     $passenger.setPriorityCheckIn(true);
     $response.setPassenger($passenger);
+    $response.setMessage("Check-in prioritario activado para adulto mayor.");
 end
 
 rule "3. DiscountForLightLuggage"
 when
     $request : Request($passenger : passenger)
+    eval($passenger.getLuggage().getWeight() < 10.0)
     $response : Response()
-    $passenger : Passenger(luggage.weight < 10)
 then
     $passenger.getLuggage().setDiscount(0.10);
     $response.setPassenger($passenger);
+    $response.setMessage("Descuento del 10% aplicado por equipaje ligero.");
 end
 
 rule "4. DenyUpgradeForOverweightLuggage"
 when
     $request : Request($passenger : passenger)
+    eval($passenger.getLuggage().getWeight() > 23.0)
     $response : Response()
-    $passenger : Passenger(luggage.weight > 23)
 then
     $passenger.setEligibleForUpgrade(false);
     $response.setPassenger($passenger);
+    $response.setMessage("No elegible para upgrade por equipaje excesivo.");
 end
 
 rule "5. AssignEmergencyExitSeatToYoungAdults"
 when
     $request : Request($passenger : passenger)
+    eval($passenger.getAge() >= 18 && $passenger.getAge() <= 40)
+    eval($passenger.getSeatPreference() == "Any")
     $response : Response()
-    $passenger : Passenger(age >= 18 && age <= 40, seatPreference == "Any")
-    $seat : Seat(type == "EmergencyExit", available == true)
 then
-    $seat.setAvailable(false);
-    $passenger.setAssignedSeat($seat);
+    $passenger.setSeatPreference("Emergency Exit");
     $response.setPassenger($passenger);
+    $response.setMessage("Asiento de salida de emergencia asignado.");
+    System.out.println("Emerg exit seat → " + $passenger.getName());
 end
 
 rule "6. CompensationForExtremeDelays"
 when
     $request : Request($passenger : passenger)
+    eval($passenger.getFlight().getDelay() > 180)
     $response : Response()
-    $passenger : Passenger(flight.delay > 180)
 then
-    $passenger.setCompensation(200.0);
+    $passenger.setCompensation(200);
     $response.setPassenger($passenger);
+    $response.setMessage("Compensación de $200 por retraso extremo.");
 end
 
 rule "7. ExtraLoyaltyPointsForLongFlights"
 when
     $request : Request($passenger : passenger)
+    eval($passenger.getFlight().getDuration() > 5)
+    eval($passenger.getStatus() != "Basic")
     $response : Response()
-    $passenger : Passenger(status != "Basic", flight.duration > 5)
 then
-    $passenger.addLoyaltyPoints(500);
+    $passenger.setLoyaltyPoints(500);
     $response.setPassenger($passenger);
+    $response.setMessage("500 puntos de lealtad por vuelo largo.");
 end
 
 rule "8. RestrictLuggageOnShortFlights"
 when
     $request : Request($passenger : passenger)
+    eval($passenger.getLuggage().getWeight() > 15.0)
+    eval($passenger.getFlight().getDuration() < 2)
     $response : Response()
-    $passenger : Passenger(luggage.weight > 15, flight.duration < 2)
 then
     $passenger.getLuggage().setAllowed(false);
     $response.setPassenger($passenger);
+    $response.setMessage("Equipaje no permitido en vuelo corto por exceso de peso.");
 end
 
 rule "9. VipLoungeAccessForPlatinumMembers"
 when
     $request : Request($passenger : passenger)
+    eval($passenger.getStatus() == "Platinum")
     $response : Response()
-    $passenger : Passenger(status == "Platinum")
 then
     $passenger.setVipAccess(true);
     $response.setPassenger($passenger);
+    $response.setMessage("Acceso al salón VIP otorgado para miembro Platinum.");
 end
 
 rule "10. PreferentialSeatForFamilies"
 when
     $request : Request($passenger : passenger)
+    eval($passenger.getTravelingWithChildren())
+    eval($passenger.getSeatPreference() == "Any")
     $response : Response()
-    $passenger : Passenger(travelingWithChildren == true, seatPreference == null || seatPreference == "")
-    $seat : Seat(type == "Familiar", available == true)
 then
-    $seat.setAvailable(false);
-    $passenger.setAssignedSeat($seat);
+    $passenger.setSeatPreference("Family");
     $response.setPassenger($passenger);
+    $response.setMessage("Asiento preferencial asignado para familia.");
 end
